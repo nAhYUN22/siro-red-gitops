@@ -1,0 +1,20 @@
+# Replace REPLACE_ME with your GitHub username/organization before applying.
+# The repository must exist and be reachable by Argo CD.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: istio-ambient-apps
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/nAhYUN22/siro-red-gitops.git
+    targetRevision: main
+    path: applications/istio
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: false

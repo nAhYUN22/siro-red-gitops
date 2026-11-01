@@ -1,0 +1,28 @@
+# Child Argo CD Application: manually sync after previous component is healthy.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: istio-cni
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://blob.istio.io/istio-release/charts
+    chart: cni
+    targetRevision: 1.31.3
+    helm:
+      releaseName: istio-cni
+      valuesObject:
+        profile: ambient
+        # Check these paths against the actual containerd CNI configuration.
+        cniBinDir: /opt/cni/bin
+        cniConfDir: /etc/cni/net.d
+        chained: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: istio-system
+  syncPolicy:
+    # No 'automated' field on purpose: initial installation is manually gated.
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
