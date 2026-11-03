@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: istio-ingress
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/nAhYUN22/siro-red-gitops.git
+    targetRevision: main
+    path: manifests/istio-ingress
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: istio-ingress
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
